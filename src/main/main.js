@@ -1,6 +1,7 @@
 module.exports = { safeQuit };
 // Module imports
 const {app, BrowserWindow, ipcMain, Menu, Tray, globalShortcut} = require('electron');
+const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const url = require('url');
 const jayson = require('jayson');
