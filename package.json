@@ -5,6 +5,10 @@
     "directories": {
       "app": "src/main"
     },
+    "files": [
+      "**/*",
+      "dist/**/*"
+    ],
     "appId": "io.lbry.LBRY",
     "mac": {
       "category": "public.app-category.utilities",
