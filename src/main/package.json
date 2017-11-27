@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "electron-dl": "^1.6.0",
+    "electron-log": "^2.2.11",
     "electron-updater": "^2.16.1",
     "install": "^0.8.7",
     "jayson": "^2.0.2",

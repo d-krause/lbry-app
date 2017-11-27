@@ -2,6 +2,7 @@ module.exports = { safeQuit };
 // Module imports
 const {app, BrowserWindow, ipcMain, Menu, Tray, globalShortcut} = require('electron');
 const { autoUpdater } = require('electron-updater');
+const log = require('electron-log');
 const path = require('path');
 const url = require('url');
 const jayson = require('jayson');
@@ -37,6 +38,9 @@ if (isDebug) {
     console.error(err)
   }
 }
+
+// For now, log info messages in production for easier debugging of built apps
+log.transports.file.level = 'info';
 
 // Misc constants
 const LATEST_RELEASE_API_URL = 'https://api.github.com/repos/lbryio/lbry-app/releases/latest';
