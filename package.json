@@ -5,6 +5,7 @@
     "directories": {
       "app": "src/main"
     },
+    "artifactName": "${name}_${version}_${arch}.${ext}",
     "files": [
       "**/*",
       "dist/**/*"

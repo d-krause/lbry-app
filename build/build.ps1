@@ -39,9 +39,6 @@ rm daemon.zip
 
 # build electron app
 node_modules\.bin\build -p never
-$binary_name = Get-ChildItem -Path dist -Filter '*.exe' -Name
-$new_name = $binary_name -replace '^LBRY Setup (.*)\.exe$', 'LBRY_$1.exe'
-Rename-Item -Path "dist\$binary_name" -NewName $new_name
 dir dist # verify that binary was built/named correctly
 
 

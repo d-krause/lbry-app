@@ -114,12 +114,6 @@ if [ "$FULL_BUILD" == "true" ]; then
 
   node_modules/.bin/build -p never
 
-  if $OSX; then
-    binary_name=$(find "$ROOT/dist" -iname "*dmg")
-    new_name=$(basename "$binary_name" | sed 's/-/_/')
-    mv "$binary_name" "$(dirname "$binary_name")/$new_name"
-  fi
-
   # electron-build has a publish feature, but I had a hard time getting
   # it to reliably work and it also seemed difficult to configure. Not proud of
   # this, but it seemed better to write my own.
