@@ -11,6 +11,11 @@
       "dist/**/*"
     ],
     "appId": "io.lbry.LBRY",
+    "publish": {
+      "provider": "s3",
+      "bucket": "aliebtests",
+      "path": "latest"
+    },
     "mac": {
       "category": "public.app-category.utilities",
       "target": "dmg"
