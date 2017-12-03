@@ -17,8 +17,7 @@
       "path": "latest"
     },
     "mac": {
-      "category": "public.app-category.utilities",
-      "target": "dmg"
+      "category": "public.app-category.utilities"
     },
     "dmg": {
       "iconSize": 128,
