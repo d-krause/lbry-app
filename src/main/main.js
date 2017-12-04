@@ -560,3 +560,20 @@ ipcMain.on('get-auth-token', (event) => {
 ipcMain.on('set-auth-token', (event, token) => {
   keytar.setPassword("LBRY", "auth_token", token ? token.toString().trim() : null);
 });
+
+autoUpdater.logger = log;
+autoUpdater.on('checking-for-update', () => {
+  log.log("Currently checking")
+});
+autoUpdater.on('update-available', () => {
+  log.log("Update is available")
+});
+autoUpdater.on('update-not-available', () => {
+  log.log("Update is not available")
+});
+autoUpdater.on('update-downloaded', () => {
+  log.log("Update downloaded")
+});
+autoUpdater.checkForUpdates().then((result) => {
+  log.log("Result from autoUpdater.checkForUpdates: " + JSON.stringify(result));
+});
