@@ -5,7 +5,12 @@
 export const handleActions = (actionMap, defaultState) => {
   return (state = defaultState, action) => {
     const handler = actionMap[action.type];
-    const newState = handler ? handler(state, action) : {};
-    return Object.assign({}, state, newState);
+
+    if (handler) {
+      const newState = handler(state, action);
+      return Object.assign({}, state, newState);
+    }
+
+    return state;
   };
 };
