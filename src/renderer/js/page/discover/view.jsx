@@ -4,8 +4,11 @@ import lbryuri from "lbryuri";
 import FileCard from "component/fileCard";
 import { Icon, BusyMessage } from "component/common.js";
 import ToolTip from "component/tooltip.js";
+import SubHeader from "component/subHeader";
+import classnames from "classnames";
+import Link from "component/link";
 
-class FeaturedCategory extends React.PureComponent {
+export class FeaturedCategory extends React.PureComponent {
   componentWillMount() {
     this.setState({
       numItems: this.props.names.length,
@@ -148,12 +151,17 @@ class FeaturedCategory extends React.PureComponent {
   }
 
   render() {
-    const { category, names } = this.props;
+    const { category, names, categoryLink } = this.props;
 
     return (
       <div className="card-row card-row--small">
         <h3 className="card-row__header">
-          {category}
+          {categoryLink ? (
+            <Link label={category} href={categoryLink} />
+          ) : (
+            category
+          )}
+
           {category &&
             category.match(/^community/i) && (
               <ToolTip
@@ -214,24 +222,28 @@ class DiscoverPage extends React.PureComponent {
       failedToLoad = !fetchingFeaturedUris && !hasContent;
 
     return (
-      <main className={hasContent && fetchingFeaturedUris ? "reloading" : null}>
+      <main
+        className={classnames("main main--no-margin", {
+          reloading: hasContent && fetchingFeaturedUris,
+        })}
+      >
+        <SubHeader modifier="full-width" />
         {!hasContent &&
           fetchingFeaturedUris && (
             <BusyMessage message={__("Fetching content")} />
           )}
         {hasContent &&
-          Object.keys(featuredUris).map(
-            category =>
-              featuredUris[category].length ? (
-                <FeaturedCategory
-                  key={category}
-                  category={category}
-                  names={featuredUris[category]}
-                />
-              ) : (
-                ""
-              )
-          )}
+          Object.keys(featuredUris).map(category => {
+            return featuredUris[category].length ? (
+              <FeaturedCategory
+                key={category}
+                category={category}
+                names={featuredUris[category]}
+              />
+            ) : (
+              ""
+            );
+          })}
         {failedToLoad && (
           <div className="empty">{__("Failed to load landing content.")}</div>
         )}

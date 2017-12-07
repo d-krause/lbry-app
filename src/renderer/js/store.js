@@ -17,8 +17,8 @@ import createCompressor from "redux-persist-transform-compress";
 import createFilter from "redux-persist-transform-filter";
 //import { REHYDRATE } from "redux-persist/constants";
 //import createActionBuffer from "redux-action-buffer";
+import subscriptionsReducer from "redux/reducers/subscriptions";
 
-const localForage = require("localforage");
 const redux = require("redux");
 const thunk = require("redux-thunk").default;
 const env = ENV;
@@ -69,6 +69,7 @@ const reducers = redux.combineReducers({
   wallet: walletReducer,
   user: userReducer,
   shapeShift: shapeShiftReducer,
+  subscriptions: subscriptionsReducer,
 });
 
 const bulkThunk = createBulkThunkMiddleware();
@@ -81,26 +82,24 @@ if (env === "development") {
   middleware.push(logger);
 }
 
-// middleware.push(createActionBuffer(REHYDRATE)); // was causing issues with authentication reducers not firing
 const composeEnhancers =
   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || redux.compose;
 const createStoreWithMiddleware = composeEnhancers(
-  autoRehydrate(),
   redux.applyMiddleware(...middleware)
 )(redux.createStore);
 
 const reduxStore = createStoreWithMiddleware(enableBatching(reducers));
-const compressor = createCompressor();
-const saveClaimsFilter = createFilter("claims", ["byId", "claimsByUri"]);
-
-const persistOptions = {
-  whitelist: ["claims"],
-  // Order is important. Needs to be compressed last or other transforms can't
-  // read the data
-  transforms: [saveClaimsFilter, compressor],
-  debounce: 10000,
-  storage: localForage,
-};
-window.cacheStore = persistStore(reduxStore, persistOptions);
+// const compressor = createCompressor();
+// const saveClaimsFilter = createFilter("claims", ["byId", "claimsByUri"]);
+//
+// const persistOptions = {
+//   whitelist: ["claims"],
+//   // Order is important. Needs to be compressed last or other transforms can't
+//   // read the data
+//   transforms: [saveClaimsFilter, compressor],
+//   debounce: 10000,
+//   storage: localForage,
+// };
+// window.cacheStore = persistStore(reduxStore, persistOptions);
 
 export default reduxStore;
