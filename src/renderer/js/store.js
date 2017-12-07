@@ -15,10 +15,10 @@ import shapeShiftReducer from "redux/reducers/shape_shift";
 import { persistStore, autoRehydrate } from "redux-persist";
 import createCompressor from "redux-persist-transform-compress";
 import createFilter from "redux-persist-transform-filter";
-//import { REHYDRATE } from "redux-persist/constants";
-//import createActionBuffer from "redux-action-buffer";
+// import { REHYDRATE } from "redux-persist/constants";
+// import createActionBuffer from "redux-action-buffer";
 import subscriptionsReducer from "redux/reducers/subscriptions";
-
+import localForage from "localforage";
 const redux = require("redux");
 const thunk = require("redux-thunk").default;
 const env = ENV;
@@ -82,24 +82,44 @@ if (env === "development") {
   middleware.push(logger);
 }
 
+const createStore = redux.createStore;
+const applyMiddleware = redux.applyMiddleware;
+
 const composeEnhancers =
   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || redux.compose;
-const createStoreWithMiddleware = composeEnhancers(
-  redux.applyMiddleware(...middleware)
-)(redux.createStore);
 
-const reduxStore = createStoreWithMiddleware(enableBatching(reducers));
-// const compressor = createCompressor();
-// const saveClaimsFilter = createFilter("claims", ["byId", "claimsByUri"]);
+const store = createStore(
+  enableBatching(reducers),
+  {},
+  composeEnhancers(autoRehydrate({ log: true }), applyMiddleware(...middleware))
+);
+
+// const createStoreWithMiddleware = composeEnhancers(
+//   redux.applyMiddleware(...middleware),
+//   autoRehydrate({ log: true })
+// )(redux.createStore);
 //
-// const persistOptions = {
-//   whitelist: ["claims"],
-//   // Order is important. Needs to be compressed last or other transforms can't
-//   // read the data
-//   transforms: [saveClaimsFilter, compressor],
-//   debounce: 10000,
-//   storage: localForage,
-// };
-// window.cacheStore = persistStore(reduxStore, persistOptions);
+// const reduxStore = createStoreWithMiddleware(enableBatching(reducers));
+const compressor = createCompressor();
+// const saveClaimsFilter = createFilter("claims", ["byId", "claimsByUri"]);
+const subscriptionsFilter = createFilter("subscriptions", ["subscriptions"]);
+const persistOptions = {
+  whitelist: ["subscriptions"],
+  // Order is important. Needs to be compressed last or other transforms can't
+  // read the data
+  transforms: [subscriptionsFilter, compressor],
+  debounce: 10000,
+  storage: localForage,
+};
 
-export default reduxStore;
+window.cacheStore = persistStore(
+  store,
+  persistOptions,
+  (err, restoredStore) => {
+    console.log("\n\n\n worked????");
+    console.log("err", err);
+    console.log("store", restoredStore);
+  }
+);
+
+export default store;
